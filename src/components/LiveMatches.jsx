@@ -59,34 +59,36 @@ const MatchCard = ({ match }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100">
-      <div className="flex justify-between items-start mb-4">
+   <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 sm:p-6 border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-2 sm:space-y-0">
         <h3 className="text-sm font-medium text-gray-600 uppercase tracking-wide">
           {match.tournament}
         </h3>
         <span
           className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
             match.status
-          )}`}
+          )} self-start sm:self-auto`}
         >
           {match.status}
         </span>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3 flex-1">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-4 sm:space-y-0">
+        {/* Home Team */}
+        <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white text-xs sm:text-sm font-bold">
               {match.homeTeam?.charAt(0) || "H"}
             </span>
           </div>
-          <span className="font-semibold text-gray-900 truncate">
+          <span className="font-semibold text-gray-900 text-sm sm:text-base truncate min-w-0" title={match.homeTeam}>
             {match.homeTeam}
           </span>
         </div>
 
-        <div className="text-center mx-6">
-          <div className="text-2xl font-bold text-gray-900 mb-1">
+        {/* Score */}
+        <div className="text-center sm:mx-4 lg:mx-6 flex-shrink-0 order-last sm:order-none">
+          <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
             {match.score || "- : -"}
           </div>
           <div className="text-xs text-gray-500 uppercase tracking-wide">
@@ -94,19 +96,20 @@ const MatchCard = ({ match }) => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 flex-1 justify-end">
-          <span className="font-semibold text-gray-900 truncate">
+        {/* Away Team */}
+        <div className="flex items-center space-x-2 sm:space-x-3 flex-1 justify-start sm:justify-end min-w-0">
+          <span className="font-semibold text-gray-900 text-sm sm:text-base truncate min-w-0 sm:order-2" title={match.awayTeam}>
             {match.awayTeam}
           </span>
-          <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 sm:order-3">
+            <span className="text-white text-xs sm:text-sm font-bold">
               {match.awayTeam?.charAt(0) || "A"}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-4 border-t border-gray-100 space-y-2 sm:space-y-0">
         <div className="text-sm text-gray-600">
           <span className="font-medium">Start:</span>{" "}
           {formatTime(match.startTime)}
@@ -134,7 +137,9 @@ export default function LiveMatches() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get("/api/live-matches");
+        const response = await axios.get(
+          "http://localhost:5000/api/live-matches"
+        );
         setMatches(response.data);
       } catch (err) {
         console.error("Error fetching matches:", err);
@@ -188,16 +193,18 @@ export default function LiveMatches() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Live Matches</h1>
-        <p className="text-gray-600">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          Live Matches
+        </h1>
+        <p className="text-gray-600 text-sm sm:text-base">
           Stay updated with real-time match information
         </p>
       </div>
 
       {loading ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-1">
           {[...Array(4)].map((_, index) => (
             <MatchSkeleton key={index} />
           ))}
@@ -205,10 +212,10 @@ export default function LiveMatches() {
       ) : (
         <>
           {matches.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-8 sm:py-12">
               <div className="text-gray-400 mb-4">
                 <svg
-                  className="w-16 h-16 mx-auto"
+                  className="w-12 h-12 sm:w-16 sm:h-16 mx-auto"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -221,22 +228,22 @@ export default function LiveMatches() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                 No Live Matches
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 text-sm sm:text-base">
                 There are currently no live matches available.
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base"
               >
                 Refresh
               </button>
             </div>
           ) : (
             <>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-1">
                 {displayedMatches.map((match, index) => (
                   <MatchCard key={match.id || index} match={match} />
                 ))}
@@ -244,11 +251,11 @@ export default function LiveMatches() {
 
               {/* Show More/Less Button */}
               {matches.length > 3 && (
-                <div className="text-center mt-8">
+                <div className="text-center mt-6 sm:mt-8">
                   {!showAll ? (
                     <button
                       onClick={handleShowMore}
-                      className="bg-blue-700/70 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2 mx-auto"
+                      className="bg-blue-700/70 hover:bg-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2 mx-auto text-sm sm:text-base"
                     >
                       <span>Show More Matches</span>
                       <svg
@@ -271,7 +278,7 @@ export default function LiveMatches() {
                   ) : (
                     <button
                       onClick={handleShowLess}
-                      className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2 mx-auto"
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center space-x-2 mx-auto text-sm sm:text-base"
                     >
                       <span>Show Less</span>
                       <svg
